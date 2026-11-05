@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>تمور بينونة | منتج</title>
+<meta name="theme-color" content="#0D4234">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@600;700&family=Montserrat:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="has-sticky">
+<div id="top"></div>
+
+<main class="container">
+  <nav class="crumbs" id="crumbs"></nav>
+
+  <div class="pdp">
+    <!-- Gallery: swipe on mobile, thumbs on desktop -->
+    <div class="gallery">
+      <div class="g-main" id="gMain"></div>
+      <div class="g-dots" id="gDots"></div>
+      <div class="g-thumbs" id="gThumbs"></div>
+    </div>
+
+    <div class="pdp-info" id="info"></div>
+  </div>
+
+  <!-- Frequently bought together (AOV) -->
+  <section class="sec" style="padding-bottom:0">
+    <div class="sec-head"><div><h2>يُشترى معاً عادةً</h2><p>وفّر 10% عند إضافة الباقة كاملة</p></div></div>
+    <div class="fbt" id="fbt"></div>
+  </section>
+
+  <!-- Reviews -->
+  <section class="sec" id="rev" style="padding-bottom:0">
+    <div class="sec-head"><div><h2>تقييمات العملاء</h2></div><button class="link-more">اكتب تقييماً</button></div>
+    <div class="rev-summary">
+      <div style="text-align:center"><div class="big" id="rAvg">4.9</div><div class="stars">★★★★★</div><small style="color:var(--muted)" id="rCount"></small></div>
+      <div class="bars">
+        <div class="bar"><span class="lat">5</span><i style="--w:90%"></i></div>
+        <div class="bar"><span class="lat">4</span><i style="--w:7%"></i></div>
+        <div class="bar"><span class="lat">3</span><i style="--w:2%"></i></div>
+        <div class="bar"><span class="lat">2</span><i style="--w:1%"></i></div>
+        <div class="bar"><span class="lat">1</span><i style="--w:0%"></i></div>
+      </div>
+    </div>
+    <div class="reviews" id="reviews"></div>
+  </section>
+
+  <!-- Cross-sell -->
+  <section class="sec">
+    <div class="sec-head"><div><h2>قد يعجبك أيضاً</h2></div></div>
+    <div class="rail" id="related"></div>
+  </section>
+</main>
+
+<!-- Sticky add-to-cart (appears when main CTA scrolls out of view) -->
+<div class="sticky-atc" id="sticky">
+  <div class="t"><b id="sName"></b><span id="sPrice"></span></div>
+  <button class="btn btn-primary" id="sBtn">أضف للسلة</button>
+</div>
+
+<div id="bottom"></div>
+<script src="app.js"></script>
+<script>
+  addEventListener('hashchange', () => { if (byId(location.hash.slice(1))) location.reload(); });
+  const p = byId(location.hash.slice(1) || new URLSearchParams(location.search).get('id')) || PRODUCTS[0];
+  document.title = `${p.name} | تمور بينونة`;
+  let size = Math.max(0, p.sizes.findIndex(s => s.best)), qty = 1;
+
+  $('#crumbs').innerHTML = `<a href="index.html">الرئيسية</a> ‹ <a href="index.html#shop">التمور</a> ‹ <span>${p.name}</span>`;
+
+  // gallery (in Shopify: product.media)
+  const pics = [[p.img, p.pos], ['assets/bowl.jpg', '50% 60%'], ['assets/giftbox.jpg', '50% 50%'], ['assets/tray.jpg', '30% 40%']];
+  $('#gMain').innerHTML = pics.map(([s, o], i) => `<img src="${s}" style="object-position:${o}" alt="${p.name} ${i + 1}" ${i ? 'loading="lazy"' : 'fetchpriority="high"'}>`).join('');
+  $('#gDots').innerHTML = pics.map((_, i) => `<i class="${i ? '' : 'on'}"></i>`).join('');
+  $('#gThumbs').innerHTML = pics.map(([s, o], i) => `<img src="${s}" style="object-position:${o}" data-i="${i}" class="${i ? '' : 'on'}" alt="">`).join('');
+  const gm = $('#gMain');
+  gm.addEventListener('scroll', () => {
+    const i = Math.round(Math.abs(gm.scrollLeft) / gm.clientWidth);
+    $$('#gDots i').forEach((d, j) => d.classList.toggle('on', i === j));
+    $$('#gThumbs img').forEach((d, j) => d.classList.toggle('on', i === j));
+  }, { passive: true });
+  $('#gThumbs').addEventListener('click', e => { const i = e.target.dataset.i; if (i != null) gm.children[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); });
+
+  // delivery cut-off countdown (honest: real 2pm same-day cut-off)
+  function cutoff() {
+    const n = new Date(), c = new Date(n); c.setHours(14, 0, 0, 0);
+    if (n > c) return 'اطلب الآن ليصلك <b>غداً</b>';
+    const m = Math.floor((c - n) / 60000);
+    return `اطلب خلال <b class="lat">${Math.floor(m / 60)}h ${m % 60}m</b> ليصلك <b>اليوم</b> (أبوظبي ودبي)`;
+  }
+
+  function renderInfo() {
+    const s = p.sizes[size];
+    $('#info').innerHTML = `
+      <div class="pdp-rate"><span class="stars">★★★★★</span><b class="lat">${p.rating}</b> · <a href="#rev" onclick="event.preventDefault();document.getElementById('rev').scrollIntoView({behavior:'smooth'})"><span class="lat">${p.reviews}</span> تقييم</a></div>
+      <h1>${p.name} <small class="lat" style="font-size:.5em;color:var(--gold-600);font-weight:500">${p.en}</small></h1>
+      <div class="pdp-price"><span class="now">${money(s.p)}</span>${s.was ? `<span class="was lat">${s.was}</span><span class="save">وفّر ${s.was - s.p} ${CUR}</span>` : ''}</div>
+      <div class="bnpl">أو 4 دفعات بقيمة <b>${money(Math.ceil(s.p / 4))}</b> بدون فوائد <span class="tb-chip">tabby</span></div>
+      <p class="short">${p.sub}. تمور منتقاة يدوياً من موسم الحصاد الجديد، معبّأة أسبوعياً في علب محكمة تحافظ على طراوتها ونكهتها الطبيعية.</p>
+
+      <div class="opt-label">الحجم: <span>${s.w}</span></div>
+      <div class="opts" id="opts">${p.sizes.map((o, i) => `<button class="opt ${i === size ? 'on' : ''}" data-s="${i}">${o.best ? '<span class="best">الأوفر</span>' : ''}<b>${o.w}</b><small>${money(o.p)}</small></button>`).join('')}</div>
+
+      <label class="gift-opt"><input type="checkbox" id="gift"> 🎁 <span>أضف تغليف هدية وبطاقة إهداء <b>مجاناً</b></span></label>
+
+      <div class="buy-row">
+        <div class="qty"><button id="qp" aria-label="زيادة">+</button><span id="qv" class="lat">${qty}</span><button id="qm" aria-label="إنقاص">−</button></div>
+        <button class="btn btn-primary" id="atc">${I.bag.replace('<svg', '<svg width="20"')} أضف للسلة · ${money(s.p * qty)}</button>
+      </div>
+      <button class="btn btn-block" style="margin-top:10px;background:#000;color:#fff;font-family:var(--font-lat)" onclick="toast('معاينة فقط: الدفع السريع عبر Shopify')">Buy with Apple Pay</button>
+
+      <div class="stock"><i></i> متوفر · يُشحن من أبوظبي</div>
+
+      <div class="delivery">
+        <div>${I.clock}<span>${cutoff()}</span></div>
+        <div>${I.truck}<span>شحن مجاني للطلبات فوق <b class="lat">${FREE_SHIP}</b> ${CUR}</span></div>
+        <div>${I.cash}<span>الدفع عند الاستلام متاح</span></div>
+      </div>
+
+      <div class="trust-row">
+        <div>${I.leaf}<span>100% طبيعي</span></div>
+        <div>${I.shield}<span>ضمان الجودة</span></div>
+        <div>${I.refresh}<span>استرجاع سهل</span></div>
+      </div>
+
+      <div class="acc">
+        <details open><summary>المميزات</summary><div class="c"><ul><li>حبات كبيرة متجانسة الحجم</li><li>بدون سكر مضاف أو مواد حافظة</li><li>غنية بالألياف والبوتاسيوم والمغنيسيوم</li></ul></div></details>
+        <details><summary>طريقة الحفظ</summary><div class="c">تُحفظ في مكان بارد وجاف بعيداً عن الشمس، أو في الثلاجة حتى 6 أشهر. يُفضّل تقديمها بدرجة حرارة الغرفة.</div></details>
+        <details><summary>الشحن والاسترجاع</summary><div class="c">توصيل في نفس اليوم داخل أبوظبي ودبي للطلبات قبل 2 ظهراً، و1–2 يوم عمل لباقي الإمارات. إذا لم تكن راضياً تواصل معنا خلال 48 ساعة.</div></details>
+      </div>`;
+    $('#sName').textContent = `${p.name} · ${s.w}`;
+    $('#sPrice').innerHTML = money(s.p);
+  }
+  renderInfo();
+
+  $('#info').addEventListener('click', e => {
+    const o = e.target.closest('[data-s]');
+    if (o) { size = +o.dataset.s; renderInfo(); return; }
+    if (e.target.closest('#qp')) { qty++; renderInfo(); }
+    if (e.target.closest('#qm') && qty > 1) { qty--; renderInfo(); }
+    if (e.target.closest('#atc')) addToCart(p.id, size, qty, true);
+  });
+  $('#sBtn').onclick = () => addToCart(p.id, size, qty, true);
+
+  // sticky ATC visibility
+  const syncSticky = () => { const b = $('#atc'); $('#sticky').classList.toggle('on', !!b && b.getBoundingClientRect().bottom < 0); };
+  addEventListener('scroll', syncSticky, { passive: true });
+
+  // FBT bundle
+  const pair = PRODUCTS.filter(x => x.id !== p.id && ['stuffed', 'khudri', 'giftbox', 'sukkari'].includes(x.id)).slice(0, 2);
+  const fbtSet = [p, ...pair];
+  function renderFbt() {
+    const checked = $$('#fbt input:checked').map(i => i.value);
+    const ids = checked.length ? checked : fbtSet.map(x => x.id);
+    const sum = ids.reduce((a, id) => a + byId(id).price, 0);
+    const all = ids.length === fbtSet.length;
+    $('#fbtTotal').innerHTML = `<span>الإجمالي ${all ? '<small style="color:var(--sale)">(خصم 10%)</small>' : ''}</span><b>${money(all ? Math.round(sum * .9) : sum)}</b>`;
+  }
+  $('#fbt').innerHTML = `<div class="fbt-items">${fbtSet.map((x, i) => `<label class="fbt-item"><input type="checkbox" value="${x.id}" checked><img src="${x.img}" style="object-position:${x.pos}" alt=""><div><b>${i ? '' : 'هذا المنتج: '}${x.name}</b><small style="color:var(--muted)">${x.sizes[0].w}</small></div><span>${money(x.price)}</span></label>`).join('')}</div>
+    <div class="fbt-total" id="fbtTotal"></div><button class="btn btn-gold btn-block" id="fbtAdd">أضف الباقة للسلة</button>`;
+  $('#fbt').addEventListener('change', renderFbt); renderFbt();
+  $('#fbtAdd').onclick = () => { $$('#fbt input:checked').forEach(i => addToCart(i.value, 0, 1, false)); openDrawer('cart'); };
+
+  // reviews
+  $('#rAvg').textContent = p.rating;
+  $('#rCount').innerHTML = `<span class="lat">${p.reviews}</span> تقييم`;
+  $('#reviews').innerHTML = [
+    ['سارة ح.', 'أبوظبي', 'جودة ممتازة وطعم طبيعي جداً. التغليف أنيق ويصلح للإهداء مباشرة.'],
+    ['عبدالله ر.', 'الشارقة', 'وصلني الطلب بسرعة والتمر طري وطازج. سأطلب مرة أخرى بالتأكيد.'],
+    ['هند ك.', 'دبي', 'جربت أكثر من متجر وهذا الأفضل. الحجم 1 كغ مناسب جداً للعائلة.'],
+  ].map(([n, c, t]) => `<div class="review"><div class="top"><div class="who"><div class="av">${n[0]}</div><div><b>${n}</b><small>${I.check} مشتري موثّق · ${c}</small></div></div><span class="stars">★★★★★</span></div><p>${t}</p></div>`).join('');
+
+  // related
+  $('#related').innerHTML = PRODUCTS.filter(x => x.id !== p.id).slice(0, 6).map(cardHTML).join('');
+</script>
+</body>
+</html>
