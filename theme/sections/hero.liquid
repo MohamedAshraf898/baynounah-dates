@@ -1,0 +1,46 @@
+<section class="hero" {{ section.shopify_attributes }}>
+  <div class="hero__media">
+    {%- if section.settings.image_mobile != blank -%}
+      {{ section.settings.image_mobile | image_url: width: 1120 | image_tag: class: 'hero__mob', loading: 'eager', fetchpriority: 'high', widths: '560,840,1120', sizes: '100vw', alt: section.settings.image_alt }}
+    {%- else -%}
+      <img class="hero__mob" src="{{ 'hero-mobile.webp' | asset_url }}" width="1120" height="780" alt="{{ section.settings.image_alt | escape }}" fetchpriority="high">
+    {%- endif -%}
+    {%- if section.settings.image_desktop != blank -%}
+      {{ section.settings.image_desktop | image_url: width: 2400 | image_tag: class: 'hero__desk', loading: 'lazy', widths: '1200,1800,2400', sizes: '100vw', alt: section.settings.image_alt }}
+    {%- else -%}
+      <img class="hero__desk" src="{{ 'hero-desktop.webp' | asset_url }}" width="2400" height="1033" alt="{{ section.settings.image_alt | escape }}" loading="lazy">
+    {%- endif -%}
+  </div>
+  <div class="hero__body">
+    {%- if section.settings.pill != blank -%}<span class="hero__pill"><img src="{{ 'palm-cream.png' | asset_url }}" alt="" width="16" height="14">{{ section.settings.pill }}</span>{%- endif -%}
+    <h1>{{ section.settings.heading }}</h1>
+    {%- if section.settings.text != blank -%}<p>{{ section.settings.text }}</p>{%- endif -%}
+    <div class="hero__ctas">
+      {%- if section.settings.btn1 != blank -%}<a href="{{ section.settings.btn1_link | default: routes.all_products_collection_url }}" class="btn btn--gold">{{ section.settings.btn1 }}</a>{%- endif -%}
+      {%- if section.settings.btn2 != blank -%}<a href="{{ section.settings.btn2_link | default: routes.all_products_collection_url }}" class="btn btn--ghost">{{ section.settings.btn2 }}</a>{%- endif -%}
+    </div>
+    <div class="hero__trust">
+      {%- for block in section.blocks -%}<span {{ block.shopify_attributes }}>{% render 'icon', name: 'check' %}{{ block.settings.text }}</span>{%- endfor -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Hero banner",
+  "settings": [
+    { "type": "image_picker", "id": "image_desktop", "label": "Desktop image (2880×1240)" },
+    { "type": "image_picker", "id": "image_mobile", "label": "Mobile image (1120×780)" },
+    { "type": "text", "id": "image_alt", "label": "Image alt text", "default": "علب تمور بينونة بين نخيل الإمارات" },
+    { "type": "text", "id": "pill", "label": "Small label", "default": "تمور إماراتية أصيلة" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "تمور بينونة <em>من مزارعنا</em> إلى بيوتكم" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "نقدّم لكم تشكيلة متنوعة من التمور الإماراتية، من الصقعي ونبتة المزروعي إلى الزاملي وغيرها من الأصناف التي تناسب ذوقكم وتضيف لضيافتكم طعماً مميزاً." },
+    { "type": "text", "id": "btn1", "label": "Primary button", "default": "تسوّق تمورنا" },
+    { "type": "url", "id": "btn1_link", "label": "Primary button link" },
+    { "type": "text", "id": "btn2", "label": "Secondary button", "default": "اكتشف علب الهدايا" },
+    { "type": "url", "id": "btn2_link", "label": "Secondary button link" }
+  ],
+  "blocks": [{ "type": "trust", "name": "Trust point", "settings": [{ "type": "text", "id": "text", "label": "Text", "default": "من مزارعنا الإماراتية" }] }],
+  "max_blocks": 4,
+  "presets": [{ "name": "Hero banner" }]
+}
+{% endschema %}

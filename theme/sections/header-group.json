@@ -1,0 +1,43 @@
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "announcement": {
+      "type": "announcement-bar",
+      "blocks": {
+        "a1": {
+          "type": "message",
+          "settings": {
+            "text": "من مزارعنا الإماراتية إلى بيوتكم 🌴"
+          }
+        },
+        "a2": {
+          "type": "message",
+          "settings": {
+            "text": "علبة صغيرة <strong>500 غ</strong> أو كبيرة <strong>950 غ</strong>"
+          }
+        },
+        "a3": {
+          "type": "message",
+          "settings": {
+            "text": "أضف رسالة إهداء مجانية مع طلبك 🎁"
+          }
+        }
+      },
+      "block_order": [
+        "a1",
+        "a2",
+        "a3"
+      ],
+      "settings": {}
+    },
+    "header": {
+      "type": "header",
+      "settings": {}
+    }
+  },
+  "order": [
+    "announcement",
+    "header"
+  ]
+}

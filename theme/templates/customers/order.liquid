@@ -1,0 +1,9 @@
+<div class="container page">
+  <p><a class="link-more" href="{{ routes.account_url }}">{{ 'customer.back' | t }}</a></p>
+  <h1>{{ 'customer.order' | t }} <span class="lat">{{ order.name }}</span></h1>
+  <p class="muted">{{ order.created_at | date: format: 'date' }} · {{ order.financial_status_label }} · {{ order.fulfillment_status_label }}</p>
+  {%- for li in order.line_items -%}
+    <div class="row" style="padding:12px 0;border-bottom:1px solid var(--line)"><span>{{ li.title }} × {{ li.quantity }}</span><span>{{ li.final_line_price | money }}</span></div>
+  {%- endfor -%}
+  <div class="row row--total"><span>{{ 'customer.total' | t }}</span><span>{{ order.total_price | money_with_currency }}</span></div>
+</div>

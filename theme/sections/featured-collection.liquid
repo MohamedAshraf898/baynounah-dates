@@ -1,0 +1,29 @@
+{%- assign c = section.settings.collection | default: collections.all -%}
+<section class="sec" id="shop" {{ section.shopify_attributes }}>
+  <div class="container">
+    <div class="sec-head">
+      <div><h2>{{ section.settings.heading }}</h2>{%- if section.settings.sub != blank -%}<p>{{ section.settings.sub }}</p>{%- endif -%}</div>
+      <a class="link-more" href="{{ c.url | default: routes.all_products_collection_url }}">{{ 'general.view_all' | t }}</a>
+    </div>
+    <div class="grid">
+      {%- for p in c.products limit: section.settings.limit -%}
+        {%- if forloop.index <= 2 -%}{%- assign eager = true -%}{%- else -%}{%- assign eager = false -%}{%- endif -%}
+        {% render 'product-card', product: p, eager: eager %}
+      {%- else -%}
+        <p class="muted">{{ 'collection.empty' | t }}</p>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Product grid",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "تسوّق تمورنا" },
+    { "type": "text", "id": "sub", "label": "Subheading", "default": "علبة صغيرة 500 غ أو كبيرة 950 غ" },
+    { "type": "collection", "id": "collection", "label": "Collection (default: all products)" },
+    { "type": "range", "id": "limit", "label": "Products", "min": 2, "max": 24, "step": 1, "default": 8 }
+  ],
+  "presets": [{ "name": "Product grid" }]
+}
+{% endschema %}

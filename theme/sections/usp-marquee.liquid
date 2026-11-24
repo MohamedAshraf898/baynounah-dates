@@ -1,0 +1,13 @@
+<div class="usp" aria-hidden="true" {{ section.shopify_attributes }}>
+  <div class="usp__row">
+    {%- for i in (1..2) -%}{%- for block in section.blocks -%}<span><img src="{{ 'palm-green.png' | asset_url }}" alt="" width="18" height="16">{{ block.settings.text }}</span>{%- endfor -%}{%- endfor -%}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Scrolling highlights",
+  "blocks": [{ "type": "item", "name": "Item", "settings": [{ "type": "text", "id": "text", "label": "Text", "default": "من مزارعنا الإماراتية" }] }],
+  "max_blocks": 8,
+  "presets": [{ "name": "Scrolling highlights" }]
+}
+{% endschema %}

@@ -1,0 +1,14 @@
+<div class="container page">
+  <h1>{{ 'customer.account' | t }}</h1>
+  <p><a class="link-more" href="{{ routes.account_logout_url }}">{{ 'customer.logout' | t }}</a> · <a class="link-more" href="{{ routes.account_addresses_url }}">{{ 'customer.addresses' | t }}</a></p>
+  <h2 style="margin:20px 0 10px;font-size:20px">{{ 'customer.orders' | t }}</h2>
+  {%- paginate customer.orders by 20 -%}
+    {%- for order in customer.orders -%}
+      <div class="row" style="padding:12px 0;border-bottom:1px solid var(--line)">
+        <a href="{{ order.customer_url }}" class="lat">{{ order.name }}</a><span>{{ order.created_at | date: format: 'date' }}</span><span>{{ order.fulfillment_status_label }}</span><span>{{ order.total_price | money }}</span>
+      </div>
+    {%- else -%}
+      <p class="muted">{{ 'customer.no_orders' | t }}</p>
+    {%- endfor -%}
+  {%- endpaginate -%}
+</div>

@@ -1,0 +1,19 @@
+<div class="container">
+  <div class="coll-head">
+    <h1>{{ 'general.search_results' | t }}</h1>
+    <form action="{{ routes.search_url }}" method="get" role="search" style="margin-top:12px;max-width:520px">
+      <input class="field" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search_placeholder' | t }}" aria-label="{{ 'general.search' | t }}">
+      <input type="hidden" name="type" value="product">
+    </form>
+  </div>
+  {%- if search.performed -%}
+    <div class="grid">
+      {%- for item in search.results -%}
+        {%- if item.object_type == 'product' -%}{% render 'product-card', product: item %}{%- endif -%}
+      {%- else -%}
+        <p class="muted">{{ 'general.no_results' | t }}</p>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>
+{% schema %}{ "name": "Search" }{% endschema %}

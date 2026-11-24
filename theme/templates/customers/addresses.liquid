@@ -1,0 +1,7 @@
+<div class="container page">
+  <p><a class="link-more" href="{{ routes.account_url }}">{{ 'customer.back' | t }}</a></p>
+  <h1>{{ 'customer.addresses' | t }}</h1>
+  {%- for address in customer.addresses -%}
+    <div style="padding:14px 0;border-bottom:1px solid var(--line)">{{ address | format_address }}</div>
+  {%- endfor -%}
+</div>

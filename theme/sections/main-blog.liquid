@@ -1,0 +1,14 @@
+{%- paginate blog.articles by 12 -%}
+<div class="container">
+  <div class="coll-head"><h1>{{ blog.title }}</h1></div>
+  <div class="grid">
+    {%- for a in blog.articles -%}
+      <article class="card">
+        <a class="card__media" href="{{ a.url }}">{%- if a.image -%}{{ a.image | image_url: width: 600 | image_tag: loading: 'lazy', alt: a.title }}{%- endif -%}</a>
+        <div class="card__body"><a href="{{ a.url }}"><h2 class="card__title">{{ a.title }}</h2></a><p class="card__sub">{{ a.excerpt_or_content | strip_html | truncatewords: 20 }}</p></div>
+      </article>
+    {%- endfor -%}
+  </div>
+</div>
+{%- endpaginate -%}
+{% schema %}{ "name": "Blog" }{% endschema %}

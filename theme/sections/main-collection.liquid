@@ -1,0 +1,34 @@
+{%- paginate collection.products by section.settings.per_page -%}
+<div class="container">
+  <div class="coll-head">
+    <h1>{{ collection.title }}</h1>
+    {%- if collection.description != blank -%}<div class="rte">{{ collection.description }}</div>{%- endif -%}
+  </div>
+  <div class="toolbar">
+    <span>{{ 'collection.count' | t: count: collection.products_count }}</span>
+    <label><span class="visually-hidden">{{ 'collection.sort' | t }}</span>
+      <select data-sort>
+        {%- for o in collection.sort_options -%}<option value="{{ o.value }}" {% if o.value == collection.sort_by or o.value == collection.default_sort_by and collection.sort_by == blank %}selected{% endif %}>{{ o.name }}</option>{%- endfor -%}
+      </select>
+    </label>
+  </div>
+  <div class="grid">
+    {%- for p in collection.products -%}
+      {%- if forloop.index <= 2 -%}{%- assign eager = true -%}{%- else -%}{%- assign eager = false -%}{%- endif -%}
+      {% render 'product-card', product: p, eager: eager %}
+    {%- else -%}
+      <p class="muted">{{ 'collection.empty' | t }}</p>
+    {%- endfor -%}
+  </div>
+  {%- if paginate.pages > 1 -%}
+    <nav class="pagination">
+      {%- for part in paginate.parts -%}
+        {%- if part.is_link -%}<a href="{{ part.url }}">{{ part.title }}</a>{%- elsif part.title == paginate.current_page -%}<span class="current">{{ part.title }}</span>{%- else -%}<span>{{ part.title }}</span>{%- endif -%}
+      {%- endfor -%}
+    </nav>
+  {%- endif -%}
+</div>
+{%- endpaginate -%}
+{% schema %}
+{ "name": "Collection", "settings": [{ "type": "range", "id": "per_page", "label": "Products per page", "min": 4, "max": 48, "step": 4, "default": 24 }] }
+{% endschema %}

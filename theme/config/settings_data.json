@@ -1,0 +1,18 @@
+{
+  "current": {
+    "color_green": "#0D4234",
+    "color_gold": "#B89155",
+    "color_brown": "#3B2620",
+    "color_bg": "#FBF8F2",
+    "free_shipping_threshold": 0,
+    "show_bnpl": false
+  },
+  "presets": {
+    "Default": {
+      "color_green": "#0D4234",
+      "color_gold": "#B89155",
+      "color_brown": "#3B2620",
+      "color_bg": "#FBF8F2"
+    }
+  }
+}

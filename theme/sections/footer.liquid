@@ -1,0 +1,50 @@
+<footer class="footer" {{ section.shopify_attributes }}>
+  <div class="pattern"></div>
+  <div class="container" style="position:relative">
+    <a class="footer__logo" href="{{ routes.root_url }}"><img src="{{ 'logo-cream.png' | asset_url }}" alt="{{ shop.name }}" width="103" height="96" loading="lazy"></a>
+    {%- if section.settings.about != blank -%}<div class="rte">{{ section.settings.about }}</div>{%- endif -%}
+    <div class="f-cols">
+      <div>
+        <h3>{{ section.settings.contact_title }}</h3>
+        {%- if settings.whatsapp != blank -%}{%- assign wa = settings.whatsapp | remove: '+' | remove: ' ' | remove: '-' -%}<a href="https://wa.me/{{ wa }}" target="_blank" rel="noopener">WhatsApp: <span class="lat" dir="ltr">{{ settings.whatsapp }}</span></a>{%- endif -%}
+        {%- if settings.phone != blank -%}<a href="tel:{{ settings.phone | remove: ' ' }}"><span class="lat" dir="ltr">{{ settings.phone }}</span></a>{%- endif -%}
+        {%- if settings.email != blank -%}<a href="mailto:{{ settings.email }}" class="lat">{{ settings.email }}</a>{%- endif -%}
+        {%- if section.settings.address != blank -%}<span>{{ section.settings.address }}</span>{%- endif -%}
+      </div>
+      {%- for block in section.blocks -%}
+        {%- assign m = linklists[block.settings.menu] -%}
+        <div {{ block.shopify_attributes }}>
+          <h3>{{ block.settings.title | default: m.title }}</h3>
+          {%- for l in m.links -%}<a href="{{ l.url }}">{{ l.title }}</a>{%- endfor -%}
+        </div>
+      {%- endfor -%}
+    </div>
+    <div class="social">
+      {%- if settings.instagram != blank -%}<a href="{{ settings.instagram }}" target="_blank" rel="noopener" aria-label="Instagram">{% render 'icon', name: 'instagram' %}</a>{%- endif -%}
+      {%- if settings.tiktok != blank -%}<a href="{{ settings.tiktok }}" target="_blank" rel="noopener" aria-label="TikTok">{% render 'icon', name: 'tiktok' %}</a>{%- endif -%}
+      {%- if settings.snapchat != blank -%}<a href="{{ settings.snapchat }}" target="_blank" rel="noopener" aria-label="Snapchat">{% render 'icon', name: 'snapchat' %}</a>{%- endif -%}
+    </div>
+    {%- if shop.enabled_payment_types.size > 0 -%}
+      <div class="pay">{%- for type in shop.enabled_payment_types -%}{{ type | payment_type_svg_tag }}{%- endfor -%}</div>
+    {%- endif -%}
+    <div class="copy">© {{ 'now' | date: '%Y' }} {{ shop.name }} · {{ section.settings.copyright }}{% if section.settings.vat != blank %} · {{ section.settings.vat }}{% endif %}</div>
+  </div>
+</footer>
+{% schema %}
+{
+  "name": "Footer",
+  "class": "footer-section",
+  "settings": [
+    { "type": "richtext", "id": "about", "label": "About text", "default": "<p>تمور بينونة… من مزارعنا الإماراتية إلى بيوتكم. تشكيلة متنوعة من التمور الإماراتية تضيف لضيافتكم طعماً مميزاً.</p>" },
+    { "type": "text", "id": "contact_title", "label": "Contact column title", "default": "تواصل معنا" },
+    { "type": "text", "id": "address", "label": "Address", "default": "الإمارات العربية المتحدة" },
+    { "type": "text", "id": "copyright", "label": "Copyright text", "default": "جميع الحقوق محفوظة" },
+    { "type": "text", "id": "vat", "label": "Tax / trade licence number (optional)" }
+  ],
+  "blocks": [{ "type": "menu", "name": "Link column", "settings": [
+    { "type": "text", "id": "title", "label": "Title" },
+    { "type": "link_list", "id": "menu", "label": "Menu", "default": "footer" }
+  ]}],
+  "max_blocks": 3
+}
+{% endschema %}

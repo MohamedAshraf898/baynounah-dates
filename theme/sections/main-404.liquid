@@ -1,0 +1,7 @@
+<div class="container page" style="text-align:center">
+  <img src="{{ 'palm-green.png' | asset_url }}" alt="" width="80" height="70" style="margin:20px auto">
+  <h1>{{ 'general.not_found' | t }}</h1>
+  <p class="muted" style="margin-bottom:18px">{{ 'general.not_found_text' | t }}</p>
+  <a class="btn btn--primary" href="{{ routes.all_products_collection_url }}">{{ 'general.back_home' | t }}</a>
+</div>
+{% schema %}{ "name": "404" }{% endschema %}
