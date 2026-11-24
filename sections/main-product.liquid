@@ -1,0 +1,149 @@
+{%- liquid
+  assign v = product.selected_or_first_available_variant
+  assign en_name = product.metafields.custom.english_name
+-%}
+<div class="container" data-pdp>
+  <nav class="crumbs" aria-label="breadcrumb">
+    <a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a> ‹
+    <a href="{{ routes.all_products_collection_url }}">{{ 'general.shop_all' | t }}</a> ‹
+    <span>{{ product.title }}</span>
+  </nav>
+
+  <div class="pdp">
+    <div class="gallery">
+      <div class="g-main">
+        {%- for m in product.media -%}
+          {%- if forloop.first -%}{%- assign lz = 'eager' -%}{%- else -%}{%- assign lz = 'lazy' -%}{%- endif -%}
+          {{ m.preview_image | image_url: width: 1200 | image_tag: loading: lz, widths: '400,600,800,1200', sizes: '(min-width: 768px) 50vw, 100vw', alt: m.alt | default: product.title, data-media-id: m.id }}
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag }}
+        {%- endfor -%}
+      </div>
+      {%- if product.media.size > 1 -%}
+        <div class="g-dots">{%- for m in product.media -%}<i class="{% if forloop.first %}on{% endif %}"></i>{%- endfor -%}</div>
+        <div class="g-thumbs">{%- for m in product.media -%}<button type="button" class="{% if forloop.first %}on{% endif %}" aria-label="{{ forloop.index }}">{{ m.preview_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}</button>{%- endfor -%}</div>
+      {%- endif -%}
+    </div>
+
+    <div class="pdp__info">
+      {%- if en_name != blank and request.locale.iso_code contains 'ar' -%}<div class="pdp__en">{{ en_name }}</div>{%- endif -%}
+      <h1>{{ product.title }}</h1>
+
+      <div class="pdp__price">
+        <span class="price__now" data-price>{{ v.price | money }}</span>
+        <span class="price__was" data-compare {% unless v.compare_at_price > v.price %}hidden{% endunless %}>{{ v.compare_at_price | money }}</span>
+        <span class="pdp__save" data-save {% unless v.compare_at_price > v.price %}hidden{% endunless %}>{%- if v.compare_at_price > v.price -%}{%- assign d = v.compare_at_price | minus: v.price | money -%}{{ 'product.save_html' | t | replace: '[amount]', d }}{%- endif -%}</span>
+      </div>
+      {%- if section.settings.show_bnpl -%}<div class="bnpl" data-bnpl>{%- assign q = v.price | divided_by: 4 | money -%}{{ 'cart.bnpl_html' | t | replace: '[amount]', q }}</div>{%- endif -%}
+
+      {%- if product.metafields.custom.short != blank -%}
+        <p class="pdp__desc">{{ product.metafields.custom.short }}</p>
+      {%- endif -%}
+
+      {%- form 'product', product, data-product-form: '', novalidate: 'novalidate' -%}
+        <input type="hidden" name="id" value="{{ v.id }}">
+        {%- unless product.has_only_default_variant -%}
+          {%- for option in product.options_with_values -%}
+            {%- assign oi = forloop.index0 -%}
+            <div class="opt-label">{{ option.name }}: <span data-opt-label>{{ option.selected_value }}</span></div>
+            <div class="opts" data-opt-group role="radiogroup" aria-label="{{ option.name | escape }}">
+              {%- for value in option.values -%}
+                {%- liquid
+                  assign ov = nil
+                  for var in product.variants
+                    if var.options[oi] == value
+                      assign ov = var
+                      break
+                    endif
+                  endfor
+                -%}
+                {%- assign parts = value | split: '·' -%}
+                <button type="button" role="radio" aria-checked="{% if option.selected_value == value %}true{% else %}false{% endif %}" class="opt{% if option.selected_value == value %} on{% endif %}" data-value="{{ value | escape }}">
+                  {%- if product.options.size == 1 and forloop.last and option.values.size > 1 and section.settings.best_badge != blank -%}<span class="opt__badge">{{ section.settings.best_badge }}</span>{%- endif -%}
+                  <b>{{ parts[0] | strip }}</b>
+                  {%- if parts[1] -%}<small>{{ parts[1] | strip }}</small>{%- endif -%}
+                  {%- if product.options.size == 1 and ov -%}<span class="price__now">{{ ov.price | money }}</span>{%- endif -%}
+                </button>
+              {%- endfor -%}
+            </div>
+          {%- endfor -%}
+        {%- endunless -%}
+
+        {%- if section.settings.gift_message -%}
+          <div class="gift">
+            <label><input type="checkbox"> {% render 'icon', name: 'gift' %} <span>{{ 'product.gift_label_html' | t }}</span></label>
+            <textarea class="field" name="properties[{{ 'product.gift_property' | t }}]" maxlength="250" placeholder="{{ 'product.gift_placeholder' | t }}" disabled></textarea>
+          </div>
+        {%- endif -%}
+
+        <div class="buy">
+          <div class="qty"><button type="button" data-qty="1" aria-label="{{ 'cart.increase' | t }}">+</button><input type="number" name="quantity" value="1" min="1" aria-label="{{ 'product.quantity' | t }}" inputmode="numeric"><button type="button" data-qty="-1" aria-label="{{ 'cart.decrease' | t }}">−</button></div>
+          <button type="submit" class="btn btn--primary" data-atc {% unless v.available %}disabled{% endunless %}>
+            {% render 'icon', name: 'bag' %}<span data-atc-label>{% if v.available %}{{ 'product.add_to_cart' | t }}{% else %}{{ 'product.sold_out' | t }}{% endif %}</span><span data-atc-total>{% if v.available %} · {{ v.price | money }}{% endif %}</span>
+          </button>
+        </div>
+        {%- if section.settings.dynamic_checkout -%}{{ form | payment_button }}{%- endif -%}
+      {%- endform -%}
+
+      <div class="stock{% unless v.available %} stock--out{% endunless %}" data-stock><i></i><span>{% if v.available %}{{ 'product.in_stock' | t }}{% else %}{{ 'product.sold_out' | t }}{% endif %}</span></div>
+
+      {%- if section.blocks.size > 0 or section.settings.cutoff_hour > 0 -%}
+        <div class="perks">
+          {%- if section.settings.cutoff_hour > 0 -%}<div>{% render 'icon', name: 'clock' %}<span data-cutoff="{{ section.settings.cutoff_hour }}"></span></div>{%- endif -%}
+          {%- for block in section.blocks -%}<div {{ block.shopify_attributes }}>{% render 'icon', name: block.settings.icon %}<span>{{ block.settings.text }}</span></div>{%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      <div class="acc">
+        {%- if product.description != blank -%}
+          <details open><summary>{{ 'product.description' | t }}</summary><div class="rte">{{ product.description }}</div></details>
+        {%- endif -%}
+        {%- if section.settings.storage != blank -%}<details><summary>{{ section.settings.storage_title }}</summary><div class="rte">{{ section.settings.storage }}</div></details>{%- endif -%}
+        {%- if section.settings.shipping != blank -%}<details><summary>{{ section.settings.shipping_title }}</summary><div class="rte">{{ section.settings.shipping }}</div></details>{%- endif -%}
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" data-product-json>
+    {"title": {{ product.title | json }}, "variants": [{%- for var in product.variants -%}{"id": {{ var.id }}, "title": {{ var.title | json }}, "options": {{ var.options | json }}, "price": {{ var.price }}, "compare_at_price": {{ var.compare_at_price | default: 0 }}, "available": {{ var.available }}, "featured_media": {% if var.featured_media %}{"id": {{ var.featured_media.id }}}{% else %}null{% endif %}}{% unless forloop.last %},{% endunless %}{%- endfor -%}]}
+  </script>
+</div>
+
+<div class="sticky-atc">
+  <div class="sticky-atc__t"><b data-sticky-title>{{ product.title }} · {{ v.title }}</b><span class="price__now" data-sticky-price>{{ v.price | money }}</span></div>
+  <button type="button" class="btn btn--primary" {% unless product.available %}disabled{% endunless %}>{{ 'product.add_to_cart' | t }}</button>
+</div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/", "@type": "Product",
+  "name": {{ product.title | json }},
+  "image": [{% for m in product.media limit: 4 %}{{ m.preview_image | image_url: width: 1200 | prepend: 'https:' | json }}{% unless forloop.last %},{% endunless %}{% endfor %}],
+  "description": {{ product.description | strip_html | json }},
+  "brand": { "@type": "Brand", "name": {{ shop.name | json }} },
+  "offers": [{% for var in product.variants %}{ "@type": "Offer", "sku": {{ var.sku | json }}, "name": {{ var.title | json }}, "price": {{ var.price | divided_by: 100.0 | json }}, "priceCurrency": {{ cart.currency.iso_code | json }}, "availability": "https://schema.org/{% if var.available %}InStock{% else %}OutOfStock{% endif %}", "url": {{ request.origin | append: var.url | json }} }{% unless forloop.last %},{% endunless %}{% endfor %}]
+}
+</script>
+{% schema %}
+{
+  "name": "Product page",
+  "settings": [
+    { "type": "checkbox", "id": "dynamic_checkout", "label": "Show Apple Pay / Buy it now button", "default": true },
+    { "type": "checkbox", "id": "show_bnpl", "label": "Show 'pay in 4' line (only if Tabby or Tamara is installed)", "default": false },
+    { "type": "checkbox", "id": "gift_message", "label": "Show free gift message field", "default": true },
+    { "type": "text", "id": "best_badge", "label": "Badge on the largest size", "default": "الأوفر" },
+    { "type": "range", "id": "cutoff_hour", "label": "Same-day shipping cut-off hour (0 = hide)", "min": 0, "max": 23, "step": 1, "default": 0 },
+    { "type": "text", "id": "storage_title", "label": "Storage tab title", "default": "طريقة الحفظ" },
+    { "type": "richtext", "id": "storage", "label": "Storage tab text", "default": "<p>تُحفظ التمور في مكان بارد وجاف بعيداً عن أشعة الشمس، ويُفضّل حفظها في الثلاجة بعد فتح العلبة للحفاظ على طراوتها.</p>" },
+    { "type": "text", "id": "shipping_title", "label": "Shipping tab title", "default": "الشحن والاسترجاع" },
+    { "type": "richtext", "id": "shipping", "label": "Shipping tab text (leave empty to hide)" }
+  ],
+  "blocks": [{ "type": "perk", "name": "Perk line", "settings": [
+    { "type": "select", "id": "icon", "label": "Icon", "default": "farm", "options": [
+      { "value": "farm", "label": "Palm / farm" }, { "value": "truck", "label": "Delivery" }, { "value": "gift", "label": "Gift" },
+      { "value": "cash", "label": "Payment" }, { "value": "shield", "label": "Quality" } ] },
+    { "type": "text", "id": "text", "label": "Text", "default": "من مزارعنا الإماراتية" }
+  ]}],
+  "max_blocks": 4
+}
+{% endschema %}

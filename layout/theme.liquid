@@ -1,0 +1,83 @@
+<!doctype html>
+{%- liquid
+  assign iso = request.locale.iso_code
+  assign dir = 'rtl'
+  unless iso contains 'ar'
+    assign dir = 'ltr'
+  endunless
+-%}
+<html lang="{{ iso }}" dir="{{ dir }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0D4234">
+  <link rel="canonical" href="{{ canonical_url }}">
+  {%- if settings.favicon != blank -%}
+    <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 64 }}">
+  {%- else -%}
+    <link rel="icon" type="image/png" href="{{ 'palm-green.png' | asset_url }}">
+  {%- endif -%}
+  <title>{{ page_title }}{% if current_page != 1 %} – {{ 'general.page' | t: page: current_page }}{% endif %}{% unless page_title contains shop.name %} | {{ shop.name }}{% endunless %}</title>
+  {%- if page_description -%}<meta name="description" content="{{ page_description | escape }}">{%- endif -%}
+  {% render 'meta-tags' %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@600;700&family=Montserrat:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  {{ 'base.css' | asset_url | stylesheet_tag }}
+  <style>
+    :root{--gold:{{ settings.color_gold }};--green:{{ settings.color_green }};--brown:{{ settings.color_brown }};--bg:{{ settings.color_bg }}}
+    .pattern{background-image:url({{ 'palm-cream.png' | asset_url }})}
+  </style>
+  {{ content_for_header }}
+</head>
+<body class="tpl-{{ template.name }}">
+  <a class="skip" href="#main">{{ 'general.skip' | t }}</a>
+  {% sections 'header-group' %}
+
+  <main id="main" role="main">
+    {{ content_for_layout }}
+  </main>
+
+  {% sections 'footer-group' %}
+
+  {% render 'cart-drawer' %}
+
+  {%- if settings.whatsapp != blank -%}
+    {%- assign wa = settings.whatsapp | remove: '+' | remove: ' ' | remove: '-' -%}
+    <a class="wa" href="https://wa.me/{{ wa }}" target="_blank" rel="noopener" aria-label="{{ 'general.whatsapp' | t }}">{% render 'icon', name: 'whatsapp' %}</a>
+  {%- endif -%}
+
+  <div class="overlay" id="overlay"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    {% render 'icon', name: 'check' %}<span id="toastTxt"></span>
+    <button type="button" data-open="cart-drawer">{{ 'cart.view' | t }}</button>
+  </div>
+
+  <script>
+    window.BD = {
+      routes: { root: {{ routes.root_url | json }}, all: {{ routes.all_products_collection_url | json }}, cart: {{ routes.cart_url | json }} },
+      moneyFormat: {{ shop.money_format | strip_html | json }},
+      freeShip: {{ settings.free_shipping_threshold | default: 0 }},
+      palm: {{ 'palm-green.png' | asset_url | json }},
+      icons: { check: {% capture ic %}{% render 'icon', name: 'check' %}{% endcapture %}{{ ic | strip | json }} },
+      strings: {
+        added: {{ 'cart.added' | t | json }}, addedShort: {{ 'cart.added_short' | t | json }},
+        add: {{ 'cart.add' | t | json }}, remove: {{ 'cart.remove' | t | json }},
+        inc: {{ 'cart.increase' | t | json }}, dec: {{ 'cart.decrease' | t | json }},
+        empty: {{ 'cart.empty' | t | json }}, startShopping: {{ 'cart.start_shopping' | t | json }},
+        shipLeft: {{ 'cart.ship_left_html' | t | json }}, shipDone: {{ 'cart.ship_done_html' | t | json }},
+        bnpl: {{ 'cart.bnpl_html' | t | json }}, upsell: {{ 'cart.upsell' | t | json }}, error: {{ 'cart.error' | t | json }},
+        addToCart: {{ 'product.add_to_cart' | t | json }}, soldOut: {{ 'product.sold_out' | t | json }}, inStock: {{ 'product.in_stock' | t | json }},
+        save: {{ 'product.save_html' | t | json }},
+        cutToday: {{ 'product.cut_today_html' | t | json }}, cutTomorrow: {{ 'product.cut_tomorrow_html' | t | json }}
+      },
+      upsell: [
+        {%- for p in settings.upsell_products -%}
+          {%- if p.available -%}{ "id": {{ p.id }}, "variant": {{ p.selected_or_first_available_variant.id }}, "title": {{ p.title | json }}, "price": {{ p.price }}, "available": true, "img": {{ p.featured_image | image_url: width: 120 | json }} }{% unless forloop.last %},{% endunless %}{%- endif -%}
+        {%- endfor -%}
+      ]
+    };
+  </script>
+  <script src="{{ 'theme.js' | asset_url }}" defer></script>
+</body>
+</html>

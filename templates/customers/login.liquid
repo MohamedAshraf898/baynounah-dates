@@ -1,0 +1,18 @@
+<div class="container page">
+  <h1>{{ 'customer.login' | t }}</h1>
+  {%- form 'customer_login', class: 'form' -%}
+    {%- if form.errors -%}<div class="errors">{{ form.errors | default_errors }}</div>{%- endif -%}
+    <label for="l-email">{{ 'customer.email' | t }}</label><input class="field" id="l-email" type="email" name="customer[email]" autocomplete="email" required dir="auto">
+    <label for="l-pass">{{ 'customer.password' | t }}</label><input class="field" id="l-pass" type="password" name="customer[password]" autocomplete="current-password" required>
+    <button class="btn btn--primary" type="submit">{{ 'customer.login' | t }}</button>
+    <a href="{{ routes.account_register_url }}" class="link-more">{{ 'customer.register' | t }}</a>
+  {%- endform -%}
+  {%- form 'recover_customer_password', class: 'form', style: 'margin-top:28px' -%}
+    {%- if form.posted_successfully? -%}<p class="form-msg">✓</p>{%- endif -%}
+    <label for="r-email">{{ 'customer.forgot' | t }}</label><input class="field" id="r-email" type="email" name="email" autocomplete="email" dir="auto">
+    <button class="btn btn--ghost" type="submit">{{ 'customer.reset' | t }}</button>
+  {%- endform -%}
+  {%- if shop.checkout.guest_login -%}
+    {%- form 'guest_login' -%}<button class="btn btn--ghost" type="submit" style="margin-top:16px">{{ 'customer.guest' | t }}</button>{%- endform -%}
+  {%- endif -%}
+</div>

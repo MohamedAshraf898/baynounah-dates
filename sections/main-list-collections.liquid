@@ -1,0 +1,12 @@
+<div class="container">
+  <div class="coll-head"><h1>{{ page_title }}</h1></div>
+  <div class="occ" style="grid-template-columns:1fr 1fr">
+    {%- for c in collections -%}
+      <a href="{{ c.url }}" style="grid-column:auto;aspect-ratio:1">
+        {%- if c.featured_image -%}{{ c.featured_image | image_url: width: 700 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}
+        <div><b>{{ c.title }}</b><small>{{ 'collection.count' | t: count: c.products_count }}</small></div>
+      </a>
+    {%- endfor -%}
+  </div>
+</div>
+{% schema %}{ "name": "Collections list" }{% endschema %}

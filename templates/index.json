@@ -1,0 +1,313 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "blocks": {
+        "b1": {
+          "type": "trust",
+          "settings": {
+            "text": "من مزارعنا الإماراتية"
+          }
+        },
+        "b2": {
+          "type": "trust",
+          "settings": {
+            "text": "أصناف متنوعة"
+          }
+        },
+        "b3": {
+          "type": "trust",
+          "settings": {
+            "text": "رسالة إهداء مجانية"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3"
+      ],
+      "settings": {}
+    },
+    "usp": {
+      "type": "usp-marquee",
+      "blocks": {
+        "b1": {
+          "type": "item",
+          "settings": {
+            "text": "من مزارعنا الإماراتية"
+          }
+        },
+        "b2": {
+          "type": "item",
+          "settings": {
+            "text": "أصناف متنوعة تناسب كل الأذواق"
+          }
+        },
+        "b3": {
+          "type": "item",
+          "settings": {
+            "text": "لضيافتكم ومناسباتكم"
+          }
+        },
+        "b4": {
+          "type": "item",
+          "settings": {
+            "text": "علب تمور مناسبة للإهداء"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4"
+      ],
+      "settings": {}
+    },
+    "chips": {
+      "type": "variety-chips",
+      "settings": {}
+    },
+    "grid": {
+      "type": "featured-collection",
+      "settings": {}
+    },
+    "boxes": {
+      "type": "box-offer",
+      "blocks": {
+        "b1": {
+          "type": "step",
+          "settings": {
+            "text": "اختر الأصناف"
+          }
+        },
+        "b2": {
+          "type": "step",
+          "settings": {
+            "text": "حدد حجم العلبة"
+          }
+        },
+        "b3": {
+          "type": "step",
+          "settings": {
+            "text": "أضف رسالتك"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3"
+      ],
+      "settings": {}
+    },
+    "occasions": {
+      "type": "occasions",
+      "blocks": {
+        "b1": {
+          "type": "card",
+          "settings": {
+            "fallback": "occ-hospitality.webp",
+            "title": "للعزائم والضيافة",
+            "text": "تشكيلة تمور تناسب تجمعات الأهل والأصدقاء."
+          }
+        },
+        "b2": {
+          "type": "card",
+          "settings": {
+            "fallback": "hero-mobile.webp",
+            "title": "هدايا من القلب",
+            "text": "علب تمور تضيف لمسة خاصة لهداياك."
+          }
+        },
+        "b3": {
+          "type": "card",
+          "settings": {
+            "fallback": "occ-corporate.webp",
+            "title": "هدايا الشركات",
+            "text": "اختيارات مميزة تناسب مناسبات العمل."
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3"
+      ],
+      "settings": {}
+    },
+    "why": {
+      "type": "why-us",
+      "blocks": {
+        "b1": {
+          "type": "item",
+          "settings": {
+            "icon": "farm",
+            "title": "من مزارعنا الإماراتية",
+            "text": "نقدّم لكم تموراً من نخيل مزارعنا في الإمارات."
+          }
+        },
+        "b2": {
+          "type": "item",
+          "settings": {
+            "icon": "grid",
+            "title": "أصناف متنوعة",
+            "text": "تشكيلة من التمور تناسب مختلف الأذواق."
+          }
+        },
+        "b3": {
+          "type": "item",
+          "settings": {
+            "icon": "coffee",
+            "title": "لضيافتكم ومناسباتكم",
+            "text": "تمور تضيف طعماً مميزاً لجمعاتكم."
+          }
+        },
+        "b4": {
+          "type": "item",
+          "settings": {
+            "icon": "gift",
+            "title": "هدايا مميزة",
+            "text": "علب تمور تناسب مختلف المناسبات."
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4"
+      ],
+      "settings": {}
+    },
+    "story": {
+      "type": "story",
+      "blocks": {
+        "b1": {
+          "type": "stat",
+          "settings": {
+            "text": "15 صنفاً من التمور"
+          }
+        },
+        "b2": {
+          "type": "stat",
+          "settings": {
+            "text": "من مزارعنا الإماراتية"
+          }
+        },
+        "b3": {
+          "type": "stat",
+          "settings": {
+            "text": "لضيافتكم ومناسباتكم"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3"
+      ],
+      "settings": {}
+    },
+    "corporate": {
+      "type": "corporate",
+      "blocks": {
+        "b1": {
+          "type": "point",
+          "settings": {
+            "text": "تشكيلة متنوعة من التمور الإماراتية"
+          }
+        },
+        "b2": {
+          "type": "point",
+          "settings": {
+            "text": "علب تمور مناسبة للإهداء"
+          }
+        },
+        "b3": {
+          "type": "point",
+          "settings": {
+            "text": "خيارات تناسب مختلف المناسبات"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3"
+      ],
+      "settings": {}
+    },
+    "reviews": {
+      "type": "testimonials",
+      "settings": {}
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "b1": {
+          "type": "qa",
+          "settings": {
+            "q": "ما أحجام العلب المتوفرة؟",
+            "a": "<p>كل صنف متوفر في علبتين: العلبة الصغيرة بوزن 500 غرام تقريباً، والعلبة الكبيرة بوزن 950 غرام تقريباً.</p>"
+          }
+        },
+        "b2": {
+          "type": "qa",
+          "settings": {
+            "q": "من أين تأتي تمور بينونة؟",
+            "a": "<p>من نخيل مزارعنا في الإمارات، ونحرص على أن يصل طعمها الأصيل إلى بيوتكم ومجالسكم.</p>"
+          }
+        },
+        "b3": {
+          "type": "qa",
+          "settings": {
+            "q": "هل يمكن إضافة رسالة إهداء؟",
+            "a": "<p>نعم، يمكنك كتابة رسالة إهداء مجانية من صفحة المنتج أو من السلة قبل إتمام الطلب.</p>"
+          }
+        },
+        "b4": {
+          "type": "qa",
+          "settings": {
+            "q": "كيف أحفظ التمور؟",
+            "a": "<p>احفظها في مكان بارد وجاف بعيداً عن أشعة الشمس، ويُفضّل حفظها في الثلاجة بعد فتح العلبة.</p>"
+          }
+        },
+        "b5": {
+          "type": "qa",
+          "settings": {
+            "q": "هل توفرون هدايا للشركات؟",
+            "a": "<p>نعم، نوفّر تشكيلة من التمور الإماراتية وعلب التمور المناسبة لهدايا الشركات والعملاء. تواصل معنا لمعرفة التفاصيل.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5"
+      ],
+      "settings": {}
+    },
+    "news": {
+      "type": "newsletter",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "usp",
+    "chips",
+    "grid",
+    "boxes",
+    "occasions",
+    "why",
+    "story",
+    "corporate",
+    "reviews",
+    "faq",
+    "news"
+  ]
+}

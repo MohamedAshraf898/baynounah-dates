@@ -1,0 +1,20 @@
+{%- layout none -%}
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}" dir="{% if request.locale.iso_code contains 'ar' %}rtl{% else %}ltr{% endif %}">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{ 'gift_card.title' | t }} – {{ shop.name }}</title>
+  {{ 'base.css' | asset_url | stylesheet_tag }}
+  {{ content_for_header }}
+</head>
+<body>
+  <div class="container page" style="text-align:center;padding-top:40px">
+    <img src="{{ 'logo-green.png' | asset_url }}" alt="{{ shop.name }}" width="120" height="112" style="margin:0 auto 20px">
+    <h1>{{ 'gift_card.title' | t }}</h1>
+    <p style="font-size:32px;font-weight:800;color:var(--green)">{{ gift_card.balance | money }}</p>
+    <p class="muted">{{ 'gift_card.code' | t }}</p>
+    <p class="lat" style="font-size:22px;letter-spacing:2px">{{ gift_card.code | format_code }}</p>
+    <a class="btn btn--primary" href="{{ shop.url }}" style="margin-top:20px">{{ 'general.back_home' | t }}</a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<aside class="drawer drawer--cart" id="cart-drawer" role="dialog" aria-modal="true" aria-label="{{ 'cart.title' | t }}">
+  <div class="drawer__head">
+    <h2>{{ 'cart.title' | t }} <small class="cart-n lat muted"></small></h2>
+    <button class="icon-btn" type="button" data-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
+  </div>
+  <div class="ship" hidden></div>
+  <div class="cart-items"></div>
+  <div class="upsell" hidden></div>
+  <form class="cart-foot" action="{{ routes.cart_url }}" method="post" hidden>
+    <div class="js-discounts"></div>
+    <div class="row row--total"><span>{{ 'cart.subtotal' | t }}</span><span class="js-subtotal"></span></div>
+    <p class="muted">{{ 'cart.shipping_note' | t }}</p>
+    {%- if settings.show_bnpl -%}<p class="muted js-bnpl" style="margin-bottom:8px"></p>{%- endif -%}
+    <button type="button" class="note-toggle">{{ 'cart.note' | t }}</button>
+    <div class="cart-note" hidden><textarea class="field" name="note" placeholder="{{ 'cart.note_placeholder' | t }}">{{ cart.note }}</textarea></div>
+    <button type="submit" name="checkout" class="btn btn--primary btn--block">{% render 'icon', name: 'shield' %} {{ 'cart.checkout' | t }}</button>
+    <div class="secure">{% render 'icon', name: 'shield' %} {{ 'cart.secure' | t }}</div>
+  </form>
+</aside>

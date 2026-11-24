@@ -1,0 +1,41 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-collection",
+      "settings": {}
+    },
+    "boxes": {
+      "type": "box-offer",
+      "blocks": {
+        "b1": {
+          "type": "step",
+          "settings": {
+            "text": "اختر الأصناف"
+          }
+        },
+        "b2": {
+          "type": "step",
+          "settings": {
+            "text": "حدد حجم العلبة"
+          }
+        },
+        "b3": {
+          "type": "step",
+          "settings": {
+            "text": "أضف رسالتك"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "boxes"
+  ]
+}

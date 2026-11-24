@@ -1,0 +1,35 @@
+<div class="container page cart-page" style="max-width:860px">
+  <h1>{{ 'cart.title' | t }}</h1>
+  {%- if cart.item_count > 0 -%}
+    <form action="{{ routes.cart_url }}" method="post" novalidate>
+      {%- for item in cart.items -%}
+        <div class="ci">
+          <a href="{{ item.url }}">{%- if item.image -%}{{ item.image | image_url: width: 180 | image_tag: alt: item.product.title, loading: 'lazy' }}{%- endif -%}</a>
+          <div>
+            <h3><a href="{{ item.url }}">{{ item.product.title }}</a></h3>
+            {%- unless item.product.has_only_default_variant -%}<small>{{ item.variant.title }}</small>{%- endunless -%}
+            {%- for p in item.properties -%}{%- unless p.last == blank or p.first contains '_' -%}<small>{{ p.first }}: {{ p.last }}</small>{%- endunless -%}{%- endfor -%}
+            <div class="qty"><input type="number" name="updates[]" value="{{ item.quantity }}" min="0" aria-label="{{ 'product.quantity' | t }}"></div>
+            <a class="ci__rm" href="{{ item.url_to_remove }}">{{ 'cart.remove' | t }}</a>
+          </div>
+          <div class="ci__p">{{ item.final_line_price | money }}</div>
+        </div>
+      {%- endfor -%}
+      <div style="margin-top:18px">
+        <label for="cart-note" class="muted">{{ 'cart.note' | t }}</label>
+        <textarea id="cart-note" class="field" name="note" placeholder="{{ 'cart.note_placeholder' | t }}">{{ cart.note }}</textarea>
+      </div>
+      {%- for d in cart.cart_level_discount_applications -%}<div class="row"><span>{{ d.title }}</span><span>-{{ d.total_allocated_amount | money }}</span></div>{%- endfor -%}
+      <div class="row row--total" style="margin-top:16px"><span>{{ 'cart.subtotal' | t }}</span><span>{{ cart.total_price | money_with_currency }}</span></div>
+      <p class="muted" style="margin-bottom:14px">{{ 'cart.shipping_note' | t }}</p>
+      <div style="display:grid;gap:10px">
+        <button type="submit" name="checkout" class="btn btn--primary btn--block">{{ 'cart.checkout' | t }}</button>
+        <button type="submit" name="update" class="btn btn--ghost btn--block">{{ 'cart.update' | t }}</button>
+      </div>
+      {%- if additional_checkout_buttons -%}<div style="margin-top:12px">{{ content_for_additional_checkout_buttons }}</div>{%- endif -%}
+    </form>
+  {%- else -%}
+    <div class="cart-empty"><img src="{{ 'palm-green.png' | asset_url }}" alt="" width="64" height="56"><p>{{ 'cart.empty' | t }}</p><br><a class="btn btn--primary" href="{{ routes.all_products_collection_url }}">{{ 'cart.start_shopping' | t }}</a></div>
+  {%- endif -%}
+</div>
+{% schema %}{ "name": "Cart" }{% endschema %}

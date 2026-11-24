@@ -1,0 +1,63 @@
+{%- liquid
+  assign menu = linklists[section.settings.menu]
+-%}
+<header class="header" {{ section.shopify_attributes }}>
+  <div class="container header__in">
+    <div class="header__side">
+      <button class="icon-btn menu-btn" type="button" data-open="menu-drawer" aria-label="{{ 'general.menu' | t }}">{% render 'icon', name: 'menu' %}</button>
+      <a class="icon-btn" href="{{ routes.search_url }}" aria-label="{{ 'general.search' | t }}">{% render 'icon', name: 'search' %}</a>
+      <nav class="nav-desk" aria-label="{{ 'general.menu' | t }}">
+        {%- for l in menu.links -%}<a href="{{ l.url }}">{{ l.title }}</a>{%- endfor -%}
+      </nav>
+    </div>
+    <a class="header__logo" href="{{ routes.root_url }}">
+      {%- if section.settings.logo != blank -%}
+        {{ section.settings.logo | image_url: width: 300 | image_tag: alt: shop.name, height: 56, widths: '150,300', loading: 'eager' }}
+      {%- else -%}
+        <img src="{{ 'logo-green.png' | asset_url }}" alt="{{ shop.name }}" width="60" height="56">
+      {%- endif -%}
+    </a>
+    <div class="header__side header__side--end">
+      {%- if localization.available_languages.size > 1 -%}
+        {%- form 'localization', class: 'lang-form' -%}
+          {%- for language in localization.available_languages -%}
+            {%- unless language.iso_code == localization.language.iso_code -%}
+              <input type="hidden" name="language_code" value="{{ language.iso_code }}">
+              <button class="lang-switch" type="submit" lang="{{ language.iso_code }}">{% if language.iso_code == 'en' %}EN{% else %}{{ language.endonym_name | upcase }}{% endif %}</button>
+              {%- break -%}
+            {%- endunless -%}
+          {%- endfor -%}
+        {%- endform -%}
+      {%- endif -%}
+      {%- if shop.customer_accounts_enabled -%}
+        <a class="icon-btn" href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" aria-label="{{ 'general.account' | t }}">{% render 'icon', name: 'user' %}</a>
+      {%- endif -%}
+      <a class="icon-btn" href="{{ routes.cart_url }}" data-open="cart-drawer" aria-label="{{ 'general.cart' | t }}">{% render 'icon', name: 'bag' %}<span class="cart-count" data-count="{{ cart.item_count }}">{% if cart.item_count > 0 %}{{ cart.item_count }}{% endif %}</span></a>
+    </div>
+  </div>
+</header>
+
+<aside class="drawer drawer--menu" id="menu-drawer" role="dialog" aria-modal="true" aria-label="{{ 'general.menu' | t }}">
+  <div class="drawer__head">
+    <img src="{{ 'logo-green.png' | asset_url }}" alt="{{ shop.name }}" width="44" height="41">
+    <button class="icon-btn" type="button" data-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
+  </div>
+  <nav class="menu-links">
+    {%- for l in menu.links -%}
+      <a href="{{ l.url }}">{{ l.title }}</a>
+      {%- for c in l.links -%}<a href="{{ c.url }}" style="padding-inline-start:32px;font-weight:400">{{ c.title }}</a>{%- endfor -%}
+    {%- endfor -%}
+  </nav>
+  {%- if section.settings.promo != blank -%}<div class="menu-promo">{{ section.settings.promo }}</div>{%- endif -%}
+</aside>
+{% schema %}
+{
+  "name": "Header",
+  "class": "header-section",
+  "settings": [
+    { "type": "image_picker", "id": "logo", "label": "Logo (leave empty to use the theme's green logo)" },
+    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" },
+    { "type": "richtext", "id": "promo", "label": "Promo box in mobile menu", "default": "<p><strong>من مزارعنا الإماراتية إلى بيوتكم</strong><br>تسوّق تمور بينونة الطازجة</p>" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,11 @@
+<div class="container page">
+  <h1>{{ 'customer.register' | t }}</h1>
+  {%- form 'create_customer', class: 'form' -%}
+    {%- if form.errors -%}<div class="errors">{{ form.errors | default_errors }}</div>{%- endif -%}
+    <label for="g-first">{{ 'customer.first_name' | t }}</label><input class="field" id="g-first" name="customer[first_name]" autocomplete="given-name">
+    <label for="g-last">{{ 'customer.last_name' | t }}</label><input class="field" id="g-last" name="customer[last_name]" autocomplete="family-name">
+    <label for="g-email">{{ 'customer.email' | t }}</label><input class="field" id="g-email" type="email" name="customer[email]" autocomplete="email" required dir="auto">
+    <label for="g-pass">{{ 'customer.password' | t }}</label><input class="field" id="g-pass" type="password" name="customer[password]" autocomplete="new-password" required>
+    <button class="btn btn--primary" type="submit">{{ 'customer.register' | t }}</button>
+  {%- endform -%}
+</div>

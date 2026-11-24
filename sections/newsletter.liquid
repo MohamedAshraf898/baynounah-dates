@@ -1,0 +1,29 @@
+<section class="sec sec--tight" {{ section.shopify_attributes }}>
+  <div class="container">
+    <div class="news">
+      <h2>{{ section.settings.heading }}</h2>
+      <p>{{ section.settings.text }}</p>
+      {%- form 'customer', id: 'newsletter-form' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        {%- if form.posted_successfully? -%}
+          <p class="form-msg" role="status">{{ 'newsletter.success' | t }}</p>
+        {%- else -%}
+          <input class="field" type="email" name="contact[email]" required autocomplete="email" placeholder="{{ 'newsletter.email' | t }}" aria-label="{{ 'newsletter.email' | t }}" dir="auto">
+          <button class="btn btn--primary" type="submit">{{ section.settings.button }}</button>
+          {%- if form.errors -%}<p class="form-msg form-msg--err">{{ form.errors | default_errors }}</p>{%- endif -%}
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "كن أول من يعرف" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "اشترك لتصلك أصناف الموسم الجديدة وعروض بينونة قبل الجميع." },
+    { "type": "text", "id": "button", "label": "Button", "default": "اشترك" }
+  ],
+  "presets": [{ "name": "Newsletter" }]
+}
+{% endschema %}

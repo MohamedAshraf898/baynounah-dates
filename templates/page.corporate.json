@@ -1,0 +1,41 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-contact",
+      "settings": {}
+    },
+    "corporate": {
+      "type": "corporate",
+      "blocks": {
+        "b1": {
+          "type": "point",
+          "settings": {
+            "text": "تشكيلة متنوعة من التمور الإماراتية"
+          }
+        },
+        "b2": {
+          "type": "point",
+          "settings": {
+            "text": "علب تمور مناسبة للإهداء"
+          }
+        },
+        "b3": {
+          "type": "point",
+          "settings": {
+            "text": "خيارات تناسب مختلف المناسبات"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "corporate"
+  ]
+}

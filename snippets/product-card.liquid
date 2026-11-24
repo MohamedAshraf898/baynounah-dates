@@ -1,0 +1,53 @@
+{%- comment -%}
+  Product card with size pills + one-tap add (no page reload).
+  Usage: {% render 'product-card', product: product, eager: false %}
+{%- endcomment -%}
+{%- liquid
+  assign v = product.selected_or_first_available_variant
+  assign img1 = product.media[0]
+  assign img2 = product.media[1]
+  assign multi = false
+  if product.has_only_default_variant == false and product.variants.size <= 3
+    assign multi = true
+  endif
+-%}
+<article class="card">
+  <a class="card__media" href="{{ product.url }}" aria-label="{{ product.title | escape }}">
+    {%- if product.available == false -%}
+      <span class="tag tag--green">{{ 'product.sold_out' | t }}</span>
+    {%- elsif v.compare_at_price > v.price -%}
+      <span class="tag tag--sale lat">-{{ v.compare_at_price | minus: v.price | times: 100 | divided_by: v.compare_at_price }}%</span>
+    {%- elsif product.metafields.custom.badge != blank -%}
+      <span class="tag">{{ product.metafields.custom.badge }}</span>
+    {%- endif -%}
+    {%- if img1 -%}
+      {%- if eager -%}{%- assign lz = 'eager' -%}{%- else -%}{%- assign lz = 'lazy' -%}{%- endif -%}
+      {{ img1 | image_url: width: 600 | image_tag: loading: lz, sizes: '(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw', widths: '300,450,600', alt: product.title }}
+      {%- if img2 -%}{{ img2 | image_url: width: 600 | image_tag: loading: 'lazy', class: 'alt', sizes: '(min-width: 1024px) 25vw, 50vw', widths: '300,600', alt: '' }}{%- endif -%}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag }}
+    {%- endif -%}
+  </a>
+  <div class="card__body">
+    <a href="{{ product.url }}"><h3 class="card__title">{{ product.title }}</h3></a>
+    {%- assign sub = product.metafields.custom.short | default: product.description | strip_html | truncatewords: 12 -%}
+    {%- if sub != blank -%}<p class="card__sub">{{ sub }}</p>{%- endif -%}
+    <div class="price">
+      {%- if product.price_varies and multi == false -%}<span class="price__from">{{ 'product.from' | t }}</span>{%- endif -%}
+      <span class="price__now">{{ v.price | money }}</span>
+      {%- if v.compare_at_price > v.price -%}<span class="price__was">{{ v.compare_at_price | money }}</span>{%- endif -%}
+    </div>
+    {%- if multi -%}
+      <div class="card__sizes" role="group" aria-label="{{ product.options.first | escape }}">
+        {%- for var in product.variants -%}
+          <button type="button" class="{% if var.id == v.id %}on{% endif %}" data-size="{{ var.id }}" data-price="{{ var.price }}" {% unless var.available %}disabled{% endunless %}>{{ var.option1 | split: '·' | first | strip }}</button>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+    {%- if product.available -%}
+      <button type="button" class="quick" data-add="{{ v.id }}">{% render 'icon', name: 'plus' %} {{ 'product.add_to_cart' | t }}</button>
+    {%- else -%}
+      <a class="quick" href="{{ product.url }}">{{ 'product.sold_out' | t }}</a>
+    {%- endif -%}
+  </div>
+</article>

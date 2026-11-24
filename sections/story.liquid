@@ -1,0 +1,36 @@
+<section class="sec" id="story" {{ section.shopify_attributes }}>
+  <div class="container story">
+    <div class="story__img">
+      {%- if section.settings.image != blank -%}
+        {{ section.settings.image | image_url: width: 1200 | image_tag: loading: 'lazy', widths: '600,900,1200', sizes: '(min-width: 768px) 50vw, 100vw' }}
+      {%- else -%}
+        <img src="{{ 'story.webp' | asset_url }}" alt="{{ section.settings.heading | escape }}" width="1200" height="900" loading="lazy">
+      {%- endif -%}
+    </div>
+    <div>
+      <span class="eyebrow"><img src="{{ 'palm-green.png' | asset_url }}" alt="" width="18" height="16">{{ section.settings.eyebrow }}</span>
+      <h2>{{ section.settings.heading }}</h2>
+      <div class="rte">{{ section.settings.text }}</div>
+      <div class="stats">
+        {%- for block in section.blocks -%}<div {{ block.shopify_attributes }}><img src="{{ 'palm-green.png' | asset_url }}" alt="" width="22" height="19">{{ block.settings.text }}</div>{%- endfor -%}
+      </div>
+      {%- if section.settings.button != blank -%}<a href="{{ section.settings.link | default: routes.all_products_collection_url }}" class="btn btn--primary">{{ section.settings.button }}</a>{%- endif -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Our story",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "قصتنا" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "قصتنا بدأت من أرض الإمارات" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>من مزارعنا الإماراتية بدأت حكاية بينونة، بشغفنا بالنخيل وحبنا للتمور التي طالما كانت جزءاً من تراثنا وضيافتنا.</p><p>نقدّم لكم تشكيلة متنوعة من التمور التي نفخر بزراعتها في أرضنا، ونحرص على أن يصل طعمها الأصيل إلى بيوتكم ومجالسكم.</p><p>ومع كل صنف من تمور بينونة، نشارككم شيئاً من خير أرضنا، ليكون حاضراً في قهوتكم اليومية وجمعاتكم ومناسباتكم الجميلة.</p>" },
+    { "type": "text", "id": "button", "label": "Button", "default": "اكتشف تمورنا" },
+    { "type": "url", "id": "link", "label": "Button link" }
+  ],
+  "blocks": [{ "type": "stat", "name": "Highlight", "settings": [{ "type": "text", "id": "text", "label": "Text", "default": "15 صنفاً من التمور" }] }],
+  "max_blocks": 3,
+  "presets": [{ "name": "Our story" }]
+}
+{% endschema %}
